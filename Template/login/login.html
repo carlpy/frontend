@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Inicio de Sesión</title>
+		<script src="../../src/axios-min.js"></script>
+		<link rel="stylesheet" href="../../src/bootstrap/css/bootstrap.css">
+		<script src="./login.js" defer></script>
+    </head>
+
+    <body class="d-flex justify-content-center align-items-center vh-100">
+		
+		<main class="bg-light rounded-2 p-5 border border-2 border-black-50 w-auto">
+			<h2 class="fw-semibold text-center mb-5">Inicio de Sesión</h2>
+			
+			<form>
+				<div class="mb-3">
+					<div class="mb-3">
+						<label for="email" class="form-label fs-6">Correo institucional</label>
+						<input type="email" class="form-control px-3 py-1" id="email" placeholder="name@example.com" required>
+					</div>
+
+					<div class="mb-3">
+						<label for="password" class="form-label fs-6">Contraseña</label>
+						<input type="password" class="form-control px-3 py-1" id="password" required>
+					</div>
+
+					<div class="mb-3">
+						<label for="role" class="form-label fs-6">Rol</label>
+						<select class="form-select" id="role" required>
+							  <option selected>Elige un rol...</option>
+							  <option value="monitor">Monitor</option>
+							  <option value="bienestar">Bienestar</option>
+							  <option value="administrador">Administrador</option>
+						</select>
+					</div>
+
+					<div class="text-center mb-3">
+						<button type="submit" class="btn btn-primary">Submit</button>
+					</div>
+
+					<a class="d-block text-blue underline text-center block" href="../recuperar/recuperar.html">¿Olvidaste tu contraseña?</a>
+			</form>
+		</main>
+    </body>
+</html>

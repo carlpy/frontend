@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administrador</title>
+    <link rel="stylesheet" href="../../src/bootstrap/css/bootstrap.css">
+	<script src="../../src/bootstrap/js/bootstrap.js"></script>
+	<script src="../../src/axios-min.js"></script>
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+	<script src="../generics.js" defer></script>
+	<script type="module" src="./app.js" defer></script>
+</head>
+<body>
+    <header class="bg-dark p-2">
+		<nav class="d-flex py-2 px-1 justify-content-end align-items-center shadow-sm">
+		   <span class="text-white" id="user-name"></span>
+		   <button class="btn btn-primary ms-4" id="logout-btn" onclick="location.href='../login/login.html'">Cerrar Sesión</button>
+	   </nav>
+   </header>
+
+    <main class="main-content row mx-auto mt-4 px-4">
+        <aside class="sidebar col-lg-2 mb-3">
+            <button class="btn btn-outline-secondary border-1 rounded-1 mb-2" data-show="users">Ver usuarios</button>
+			<button class="btn btn-outline-secondary border-1 rounded-1 mb-2" data-show="add-users">Agregar usuario</button> 
+			<button class="btn btn-outline-secondary border-1 rounded-1 mb-2" data-show="add-monitor">Agregar monitores</button> 
+        </aside>
+
+        <section class="show-sect d-none col-lg-10" id="add-users">  <!-- Add users  -->
+            <h2 class="mb-3">Agregar usuarios</h2> 
+
+			<form>
+				<div class="d-flex align-items-center justify-content-between">
+					<div class="mb-3">
+					  <label for="name" class="form-label">Nombre</label>
+					  <input type="text" class="form-control" id="name" required>
+					</div>
+	
+					<div class="mb-3">
+					  <label for="lname" class="form-label">Apellido</label>
+					  <input type="text" class="form-control" id="lname" required>
+					</div>
+				</div>
+
+				<div class="mb-3">
+				  <label for="mail" class="form-label">Correo</label>
+				  <input type="email" class="form-control" id="mail" required>
+				</div>
+
+				<div class="mb-3">
+				  <label for="password" class="form-label">Contraseña</label>
+				  <input type="password" class="form-control" id="password" required>
+				</div>
+				
+				<select class="form-select mb-3" id="role" required>
+					<option selected>Seleciona rol a desempeñar</option>
+					<option value="1">monitor</option>
+					<option value="2">administrador</option>
+					<option value="3">bienestar</option>
+				</select>
+
+				<button type="submit" class="btn btn-primary">Submit</button>
+			</form>
+        </section>
+
+		<section class="show-sect col-lg-10 px-3" id="show-users"> <!-- Display users  -->
+            <h2 class="mb-3">Usuarios registrados</h2> 
+			<div class="table-responsive-md">
+				<table id="myTable" class="display table table-sm text-center">
+					<thead>
+						<tr>
+							<th>id</th>
+							<th>Nombre</th>
+							<th>Apellido</th>
+							<th>Correo</th>
+							<th>Contraseña</th>
+							<th>Rol</th>
+							<th>Acciones</th>
+						</tr>
+					</thead>
+					
+					<tbody class="users-space">
+						<!-- Aqui van los usuarios cargados desde la base de datos -->
+					</tbody>
+				</table>
+			</div>
+
+			<!-- editing user's info -->
+			<div class="modal fade" id="editUser" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editUserLabel" aria-hidden="true">
+				<div class="modal-dialog">
+				  <div class="modal-content">
+					<div class="modal-header">
+					  <h1 class="modal-title fs-5" id="staticBackdropLabel">Editar informacion de usuario</h1>
+					  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<div class="d-flex align-items-center justify-content-between">
+							<div class="mb-3">
+							  <label for="e_name" class="form-label">Nombre</label>
+							  <input type="text" class="form-control" id="e_name" required>
+							</div>
+			
+							<div class="mb-3">
+							  <label for="e_lname" class="form-label">Apellido</label>
+							  <input type="text" class="form-control" id="e_lname" required>
+							</div>
+						</div>
+		
+						<div class="mb-3">
+						  <label for="e_mail" class="form-label">Correo</label>
+						  <input type="email" class="form-control" id="e_mail" required>
+						</div>
+		
+						<div class="mb-3">
+						  <label for="e_password" class="form-label">Contraseña</label>
+						  <input type="password" class="form-control" id="e_password" required>
+						</div>
+						
+						<select class="form-select mb-3" id="e_role" required>
+							<option selected>Seleciona rol a desempeñar</option>
+							<option value="1">monitor</option>
+							<option value="2">administrador</option>
+							<option value="3">bienestar</option>
+						</select>
+		
+					</div>
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-primary edit-btn" data-bs-dismiss="modal">Editar</button>
+					  	<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+					</div>
+				  </div>
+				</div>
+			</div>
+
+			<!-- Delete user -->
+			<div class="modal fade" id="deleteUser" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteUserLabel" aria-hidden="true">
+				<div class="modal-dialog">
+				  <div class="modal-content">
+					<div class="modal-header">
+					  <h1 class="modal-title fs-5" id="staticBackdropLabel">Eliminar usuario</h1>
+					  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<p>¿Estas seguro de eliminar este usuario?</p>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-danger delete-btn" data-bs-dismiss="modal">Borrar</button>
+						<button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+					</div>
+				  </div>
+				</div>
+			</div>
+        </section>
+
+		<section class="show-sect d-none col-lg-10 px-3" id="add-monitor"> 
+			<h2 class="mb-3">Crear nuevos monitores</h2>
+			
+			<div class="table-responsive-md">
+				<table id="accepted-postulations" class="table table-sm text-center">
+					<thead>
+						<tr>
+							<th>Nombre</th>
+							<th>Apellido</th>
+							<th>Correo</th>
+							<th>Tipo</th>
+							<th>Acciones</th>
+						</tr>
+					</thead>
+					
+					<tbody class="postulations-space">
+						<!-- Aqui van los usuarios cargados desde la base de datos -->
+					</tbody>
+				</table>
+			</div>
+
+			<div class="modal fade" id="createMonitor" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="createMonitorLabel" aria-hidden="true">
+				<div class="modal-dialog">
+				  <div class="modal-content">
+					<div class="modal-header">
+					  <h1 class="modal-title fs-5" id="staticBackdropLabel">Crear monitor</h1>
+					  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<p>¿Estas seguro de crear este monitor?</p>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary create-btn" data-bs-toggle="modal">Crear</button>
+						<button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+					</div>
+				  </div>
+				</div>
+			</div>
+
+			<!-- -------------------------------------- -->		  
+		</section>
+    </main>
+</body>
+</html>

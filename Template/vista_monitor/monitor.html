@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Perfil del Monitor</title>
+        <link rel="stylesheet" href="../../src/bootstrap/css/bootstrap.css">
+        <script src="../../src/bootstrap/js/bootstrap.js"></script>
+		<script src="../../src/axios-min.js"></script>
+        <script src="../generics.js" defer></script>
+		<script src="./monitor.js" defer></script>
+    </head>
+    <body>
+		<header class="bg-dark p-2">
+			<nav class="d-flex py-2 px-1 justify-content-end align-items-center shadow-sm">
+			   <span class="text-white" id="user-name">Nombre del monitor (Monitor)</span>
+			   <button class="btn btn-primary ms-4" id="logout-btn" onclick="location.href='../login/login.html'">Cerrar Sesión</button>
+		   </nav>
+	   </header>
+	
+	   <main class="container-fluid mx-auto row mt-5">
+			<section class="col-lg-2 d-block">
+				<button class="btn btn-outline-secondary border-1 rounded-1 mb-2" data-show="personal-info">Datos personales</button>
+				<button class="btn btn-outline-secondary border-1 rounded-1 mb-2" data-show="feedback">Retroalimentación</button>
+				<button class="btn btn-outline-secondary border-1 rounded-1 mb-2" data-show="schedule">Horario</button>
+			</section>
+	
+			<section class="show-sect col-lg-10" id="personal-data"> <!-- datos personales -->
+				<h2 class="mb-4">Datos personales</h2>
+			
+				<ul class="list-group">
+					<li class="list-group-item fw-bolder">Correo Institucional: <span class="fw-medium email"></span></li>
+					<li class="list-group-item fw-bolder">Cuatrimestre: <span class="fw-medium cycle"></span></li>
+					<li class="list-group-item fw-bolder">Promedio: <span class="fw-medium average"></span></li>
+					<li class="list-group-item fw-bolder">Área: <span class="fw-medium area"></span></li>
+				</ul>
+			</section>
+
+			<section class="show-sect d-none col-lg-10" id="feedback"> <!-- retroalimentaciones -->
+				<h2 class="mb-4">Retroalimentación</h2> <!-- ager to open up a modal with all the information -->
+
+				<div> <!-- all the feedback will be suplyied via dinamically -->
+					<div class="feedbacks-container">
+						
+					</div> 
+				</div>
+			</section>
+	
+			<section class="show-sect d-none col-lg-10" id="schedule"> <!-- Horario  -->
+				<h2 class="mb-4">Horario</h2>
+
+				<div class="schedule-container">
+					<div class="d-flex align-items-center mb-3 justify-content-between">
+						<p>Edita tu horario actual o crea uno si no lo tienes</p>
+						<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Editar</button>
+
+						<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h1 class="modal-title fs-5" id="staticBackdropLabel">Ingresa tu horaio semanal</h1>
+										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+									</div>
+									
+									<div class="modal-body">
+										<form id="scheduleForm">
+											<div class="d-flex align-items-center mb-3 justify-content-between weekdays">
+												<span>Lunes</span>
+												<label>Inicio:</label><input type="time" class="start_time" required>
+												<label>Fin:</label><input type="time" class="end_time" required>
+											</div>
+											<div class="d-flex align-items-center mb-3 justify-content-between weekdays">
+												<span>Martes</span>
+												<label>Inicio:</label><input type="time" class="start_time" required>
+												<label>Fin:</label><input type="time" class="end_time" required>
+											</div>
+											<div class="d-flex align-items-center mb-3 justify-content-between weekdays">
+												<span>Miercoles</span>
+												<label>Inicio:</label><input type="time" class="start_time" required>
+												<label>Fin:</label><input type="time" class="end_time" required>
+											</div>
+											<div class="d-flex align-items-center mb-3 justify-content-between weekdays">
+												<span>Jueves</span>
+												<label>Inicio:</label><input type="time" class="start_time" required>
+												<label>Fin:</label><input type="time" class="end_time" required>
+											</div>
+											<div class="d-flex align-items-center mb-3 justify-content-between weekdays">
+												<span>Viernes</span>
+												<label>Inicio:</label><input type="time" class="start_time" required>
+												<label>Fin:</label><input type="time" class="end_time" required>
+											</div>
+											<div class="d-flex align-items-center mb-3 justify-content-between weekdays">
+												<span>Sabado</span>
+												<label>Inicio:</label><input type="time" class="start_time" required>
+												<label>Fin:</label><input type="time" class="end_time" required>
+											</div>
+											
+											<input type="submit" value="Submit" style="display: none;">
+										</form>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary" id="updateButton" data-bs-dismiss="">Actualizar</button>
+										<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<table class="table schedule-table">
+						<thead>
+							<tr>
+								<th>Día</th>
+								<th>Hora de inicio</th>
+								<th>Hora de finalizacion</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+			</section>
+	   </main>
+    </body>
+</html>
+ 

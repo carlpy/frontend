@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Formulario de Postulación</title>
+        <link rel="stylesheet" href="../../src/bootstrap/css/bootstrap.css" />
+		<script src="../../src/bootstrap/js/bootstrap.js"></script>
+		<script src="../../src/axios-min.js"></script>
+        <script src="form.js" defer></script>
+    </head>
+
+    <body class="d-flex bg-light align-items-center justify-content-center vh-100">
+        <main class="border border-1 rounded-1 border-black-50 p-4 bg-black-50 shadow-sm">
+            <h2 class="mb-4 text-center">Formulario de Postulación</h2>
+
+            <form>
+                <div class="d-flex justify-content-between">
+                    <!-- Nombre y apellidos -->
+                    <div class="form-group mb-3">
+                        <label for="name" class="form-label fs-6">Nombre(s)</label>
+                        <input type="text" class="form-control px-3 py-1" id="name" placeholder="Nombre..." required/>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="lname" class="form-label fs-6">Apellido</label>
+                        <input type="text" class="form-control px-3 py-1" id="lname" placeholder="Last name..." required/>
+                    </div>
+                </div>
+
+                <div class="form-group mb-3"><!-- correo -->
+                    <label for="email" class="form-label fs-6">Correo institucional</label>
+                    <input type="email" class="form-control px-3 py-1" id="email" placeholder="name@example.com" required/>
+                </div>
+
+                <div class="form-group mb-3">
+                    <!-- programa -->
+                    <label for="program" class="form-label">Programa académico:</label>
+                    <select class="form-select" id="program" required>
+                        <option selected>Seleccione...</option>
+                    </select>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <!-- cuatrimestre y promedio -->
+                    <div class="form-group mb-3">
+                        <label for="current_level" class="form-label fs-6">Cuatrimestre</label>
+                        <input type="number" class="form-control px-3 py-1" id="current_level" placeholder="2" required/>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="average" class="form-label fs-6">Promedio</label>
+                        <input type="number" class="form-control px-3 py-1" id="average" step="0.01" placeholder="3..." required/>
+                    </div>
+                </div>
+
+                <div class="form-group mb-3">
+                    <!-- tipo de monitoria -->
+                    <label for="tutoring_type" class="form-label fs-6">Tipo de monitoria</label>
+                    <select class="form-select px-3 py-1" id="tutoring_type" required>
+                        <option selected>Seleccione...</option>
+                        <option value="academica">Academica</option>
+                        <option value="administrativa">Administrativa</option>
+                    </select>
+                </div>
+
+                <div class="form-group mb-3">
+                    <!-- Area de desempeño -->
+                    <label for="tutoring_area" class="form-label fs-6">Area para desempeñarse</label>
+                    <select class="form-control px-3 py-1" id="tutoring_area" disabled >
+                        <!-- All the options will be added from the db with a window DOMContentLoaded event -->
+                    </select>
+                </div>
+
+                <div class="form-group mb-3">
+                    <!-- Area de desempeño -->
+                    <label for="admin_area" class="form-label fs-6">Area para desempeñarse ( Administrativo )</label>
+                    <select class="form-control px-3 py-1" id="admin_area" disabled>
+                        <!-- All the options will be added from the db with a window DOMContentLoaded event -->
+                    </select>
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Enviar Postulación</button>
+                </div>
+            </form>
+        </main>
+    </body>
+</html>

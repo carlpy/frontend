@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión del Personal de Bienestar</title>
+    <link rel="stylesheet" href="../../src/bootstrap/css/bootstrap.css">
+	<script src="../../src/bootstrap/js/bootstrap.js"></script>
+	<script src="../../src/axios-min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script src="./bienestar.js" defer></script>
+	<script src="../generics.js" defer></script>
+
+	<style>
+		 .chart-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px; /* Space between charts */
+        }
+        .chart {
+            flex: 1 1 calc(33.333% - 16px); /* 3 columns with spacing */
+            box-sizing: border-box;
+            max-width: 100%; /* Ensure charts fit within their containers */
+            height: auto; /* Ensure the height scales correctly */
+        }
+        canvas {
+            width: 100% !important; /* Make canvas scale to fit container */
+            height: auto !important; /* Maintain aspect ratio */
+        }
+	</style>
+</head>
+<body>
+	<header class="bg-dark p-2">
+		<nav class="d-flex py-2 px-1 justify-content-end align-items-center shadow-sm">
+		   <span class="text-white" id="user-name">Nombre del bienestar (Bienestar-IUB)</span>
+		   <button class="btn btn-primary ms-4" id="logout-btn" onclick="location.href='../login/login.html'">Cerrar Sesión</button>
+	   </nav>
+   </header>
+
+   <main class="container-fluid mx-auto row mt-5">
+		<section class="col-lg-2 d-block">
+			<button class="btn btn-outline-secondary border-1 rounded-1 mb-2" data-show="applications">Ver Postulaciones</button>
+			<button class="btn btn-outline-secondary border-1 rounded-1 mb-2" data-show="modules">Gestionar Módulos</button>
+			<button class="btn btn-outline-secondary border-1 rounded-1 mb-2" data-show="areas">Gestionar Áreas</button>
+			<button class="btn btn-outline-secondary border-1 rounded-1 mb-2" data-show="stadistics">Mostrar estadisticas</button>
+		</section>
+
+		<section class="show-sect col-lg-10" id="apply"> <!-- postulaciones -->
+			<h2>Postulaciones de Estudiantes</h2>
+
+			<div class="table-responsive">
+
+				<table class="table text-center table-sm">
+					<thead>
+						<tr>
+							<th scope="col" class="fs-6">Nombre</th>
+							<th scope="col" class="fs-6">Correo</th>
+							<th scope="col" class="fs-6">Programa</th>
+							<th scope="col" class="fs-6">Cuatrimestre</th>
+							<th scope="col" class="fs-6">Promedio</th>
+							<th scope="col" class="fs-6">Tipo de Monitoria</th>
+							<th scope="col" class="fs-6">Módulo/Área</th>
+							<th scope="col" class="fs-6">Acciones</th>
+						</tr>
+					</thead>
+	
+					<tbody class="postulation-space">
+					</tbody>
+				</table>
+			</div>
+		
+			
+			<!-- accept postulations -->
+			<div class="modal fade" id="accept" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="acceptLabel" aria-hidden="true">
+				<div class="modal-dialog">
+				  <div class="modal-content">
+					<div class="modal-header">
+					  <h1 class="modal-title fs-5" id="staticBackdropLabel">Aceptar propuesta</h1>
+					  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<p>¿Esta seguro de aceptar esta propuesta?</p>
+					</div>
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-primary accept-postulation-btn" data-bs-target="#exampleModalToggle2" data-bs-dismiss="modal">Aceptar</button>
+					  	<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+					</div>
+				  </div>
+				</div>
+			</div>
+
+			<!-- Decline postulations -->
+			<div class="modal fade" id="decline" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="delclineLabel" aria-hidden="true">
+				<div class="modal-dialog">
+				  <div class="modal-content">
+					<div class="modal-header">
+					  <h1 class="modal-title fs-5" id="staticBackdropLabel">Rechazar propuesta</h1>
+					  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<p>¿Estas seguro de rechazar esta propuesta?</p>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-danger decline-postulation-btn" data-bs-dismiss="modal">Rechazar</button>
+						<button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+					</div>
+				  </div>
+				</div>
+			</div>
+		</section>
+
+		<section class="show-sect d-none col-lg-10" id="academic"> <!-- monitores academicos -->
+			<h2 class="mb-4">Gestionar Monitores Academicos</h2>
+			<div class="academic-container"></div>
+		</section>
+
+		<section class="show-sect d-none col-lg-10" id="administrative"> <!-- monitores administrativos -->
+			<h2 class="mb-3">Gestionar Monitores Administrativos</h2>
+			<div class="administrative-container"></div>
+		</section> 
+
+		<section class="show-sect d-none col-lg-10 " id="stats"> <!-- monitores administrativos -->
+			<h2 class="mb-3">Mostrar estadisticas</h2>
+			<div class="chart-container">
+				<div class="chart"><canvas id="roles_ch"></canvas></div><!-- lineal, roles monitor, bienestar, admin .👍 -->
+				<div class="chart"><canvas id="monitors_type"></canvas></div><!-- circular, tipo de monitores 👍 -->
+				<div class="chart"><canvas id="monitors_career"></canvas></div><!-- lineal, carreras por monitores 👍 -->
+				<div class="chart"><canvas id="monitor_subjects"></canvas></div><!-- linear, materias por monitores academicos 👍-->
+				<div class="chart"><canvas id="monitor_areas"></canvas></div><!-- linear, areas de administracion por monitores administrativos 👍 -->
+			</div>
+		</section> 
+		  
+		  <!-- Display monitor information -->
+		<div class="modal fade" id="showMonitorInfo" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="showMonitorInfoLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h1 class="modal-title fs-5" id="showMonitorInfoLabel">Informacion del monitor </h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					
+					<div class="modal-body">
+						<ul class="list-group">
+							<li class="list-group-item fw-bolder">Correo Institucional: <span class="fw-medium email"></span></li>
+							<li class="list-group-item fw-bolder">Cuatrimestre: <span class="fw-medium cycle"></span></li>
+							<li class="list-group-item fw-bolder">Promedio: <span class="fw-medium average"></span></li>
+							<li class="list-group-item fw-bolder">Área: <span class="fw-medium area"></span></li>
+						</ul>
+
+						<table class="table">
+							<thead>
+								<tr>
+									<th>Día</th>
+									<th>Hora de inicio</th>
+									<th>Hora de finalizacion</th>
+								</tr>
+							</thead>
+							<tbody class="schedule-table"></tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Give feedback -->
+		<div class="modal fade" id="feedbackMenu" tabindex="-1" aria-labelledby="feedbackMenuLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h1 class="modal-title fs-5" id="feedbackMenuLabel">Formulario de retroalimentacion</h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					
+					<div class="modal-body">
+						<form id="scheduleForm">
+							<div class="form-floating">
+								<textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px" required></textarea>
+								<label for="floatingTextarea2">Comentarios para el monitor</label>
+							  </div>
+
+							<input type="submit" value="Submit" style="display: none;">
+						</form>
+					</div>
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" id="updateButton" data-bs-dismiss="">Enviar retroalimentacion</button>
+						<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
+</body>
+</html>
