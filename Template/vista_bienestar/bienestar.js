@@ -185,28 +185,8 @@ function renderMonitors() {
 		}))
 
 		document.querySelectorAll('.mon-feedback').forEach(btn => btn.addEventListener('click', (e) => { selectedEmail = e.target.parentElement.parentElement.querySelector('span') }))
-
 	})
 }
-
-/* 
-	- set the load username from the admin field to overall field 
-	- bienestar.html file
-		* display the proper monitors in each zone 👍
-		* able to create retroalimentations to every monitor as a popup 👍
-	-
-	- set up the monitor thing
-		* the horario's table 👍
-		* display their proper retros 👍
-
-	- the postulations form
-		* avoid entering same email twice 👍
-*/
-
-
-/* make btns for accept/decline work 👍 */
-/* get to admin and pass the info from postulaciones to monitores 👍*/
-/* render the info from the monitors to Modulos and Areas sections 👍 */
 
 function setFeedbackForm() {	
 	const updateButton = document.getElementById('updateButton');

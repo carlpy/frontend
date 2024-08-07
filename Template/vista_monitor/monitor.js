@@ -119,9 +119,3 @@ function renderPersonalInfo() {
 		})
 	})
 }
-
-/*
-	- add the schedule to the monitor 👍
-	- render the schedule to the schedule zone 👍
-	- render the feedback 👍
-*/

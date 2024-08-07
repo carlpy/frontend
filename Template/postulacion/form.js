@@ -107,7 +107,3 @@ function displayAreas() {
             .catch((e) => console.log(e));
     });
 }
-
-/* Verificar si el correo ya existe antes de añadir la postulacion 👍 */
-/* Cambiar el input de promedio para que acepte decimales 👍 */
-/* Cambiar el campo de tipo de monitoria para que acepte "administrativa" ó "academica" 👍 */
