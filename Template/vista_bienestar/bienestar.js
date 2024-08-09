@@ -34,15 +34,16 @@ window.addEventListener("DOMContentLoaded", () => {
 	handlePostulation();
 	renderMonitors();
 	setFeedbackForm();
-	setStadistics()
+	// setStadistics()
 });
 
 function loadContent() {
-    showApplies.forEach((btn) =>
+	
+	showApplies.forEach((btn) =>
         btn.addEventListener("click", () => {
-            showZones.forEach((zone) => zone.classList.add("d-none"));
+			showZones.forEach((zone) => zone.classList.add("d-none"));
             if (btn.dataset.show === "applications") { 
-                appliesContent.classList.remove("d-none");
+				appliesContent.classList.remove("d-none");
 				loadPostulations();
             }
             if (btn.dataset.show === "modules") { academicMonitors.classList.remove("d-none"); }
@@ -53,8 +54,7 @@ function loadContent() {
 }
 
 function loadPostulations() {
-    axios
-        .get(baseURL + "/postulations/en%20espera")
+    axios.get(baseURL + `/postulations/en-espera`)
         .then((res) => {
             console.log(res.data);
             const postulations = res.data;
@@ -100,7 +100,7 @@ function loadPostulations() {
 function setPostulationStatus(email, status) {
     axios.put(`${baseURL}/setPostulationStatus/${email}/${status}`)
         .then((res) => {
-            console.log(res);
+            // console.log(res);
             alert("Cambio exitoso exitosamente");
             loadPostulations();
         })
@@ -110,12 +110,12 @@ function setPostulationStatus(email, status) {
 function handlePostulation() {
 	acceptPostulationBtn.addEventListener('click', () => {
 		const newStatus = "aceptada"
-		console.log("usuario acceptado", selected)
+		// console.log("usuario acceptado", selected)
 		setPostulationStatus(selected, newStatus)
 	})
 	declinedPostulationBtn.addEventListener('click', () => {
 		const newStatus = "rechazada"
-		console.log("usuario declinado", selected)
+		// console.log("usuario declinado", selected)
 		setPostulationStatus(selected, newStatus)
 	})
 }
@@ -130,7 +130,7 @@ function renderMonitors() {
 		academic.data.forEach((monitor) => createMonitorELements(monitor, academicRender))
 		administrative.data.forEach((monitor) => createMonitorELements(monitor, adminRender));
 
-		console.log(academic.data, administrative.data)
+		// console.log(academic.data, administrative.data)
 
 		function createMonitorELements({nombre, correo, area}, container) {
 			const virtualContainer = document.createElement("div");
@@ -156,7 +156,7 @@ function renderMonitors() {
 
 		document.querySelectorAll('.mon-info').forEach(btn => btn.addEventListener('click', (e) => { 
 			selectedEmail = e.target.parentElement.parentElement.querySelector('span').textContent;
-			console.log(selectedEmail)
+			// console.log(selectedEmail)
 			Promise.all([
 				axios.get(`${baseURL}/getMonitors/${selectedEmail}`),
 				axios.get(`${baseURL}/schedules/${selectedEmail}`)

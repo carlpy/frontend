@@ -11,6 +11,8 @@ const adminAreaInp = document.querySelector("#admin_area");
 const form = document.querySelector("form");
 const baseURL = 'https://backend-five-wheat.vercel.app'
 
+
+
 window.addEventListener("DOMContentLoaded", () => {
     displayCareers();
     displayAreas();
@@ -37,7 +39,7 @@ form.addEventListener("submit", (e) => {
         .then((res) => {
             alert(res.data.msg);
 			console.log(res.data.msg)
-            window.location.href = '../index.html'
+            window.location.href =  '../../index.html' // corregido
             document.querySelectorAll("form input").forEach((inp) => (inp.value = ""));
         })
         .catch(function (error) {
