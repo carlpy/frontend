@@ -34,7 +34,7 @@ window.addEventListener("DOMContentLoaded", () => {
 	handlePostulation();
 	renderMonitors();
 	setFeedbackForm();
-	setStadistics()
+	/* setStadistics(); to fix stadistics */
 });
 
 function loadContent() {
