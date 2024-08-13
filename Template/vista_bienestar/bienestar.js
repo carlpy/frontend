@@ -25,6 +25,9 @@ const scheduleTable = document.querySelector('.schedule-table')
 const academicRender = document.querySelector('.academic-container');
 const adminRender = document.querySelector('.administrative-container');
 
+let administrativeData;
+let academicData;
+
 let selected = 0;
 let selectedEmail = '';
 
@@ -34,7 +37,7 @@ window.addEventListener("DOMContentLoaded", () => {
 	handlePostulation();
 	renderMonitors();
 	setFeedbackForm();
-	/* setStadistics(); to fix stadistics */
+	setStadistics();
 });
 
 function loadContent() {
@@ -48,7 +51,7 @@ function loadContent() {
             }
             if (btn.dataset.show === "modules") { academicMonitors.classList.remove("d-none"); }
             if (btn.dataset.show === "areas") { adminMonitors.classList.remove("d-none"); }
-			if (btn.dataset.show === "stadistics") { statsContainer.classList.remove("d-none") } 
+			if (btn.dataset.show === "stadistics") { statsContainer.classList.remove("d-none"); setStadistics() } 
         })
     );
 }
@@ -122,15 +125,14 @@ function handlePostulation() {
 
 function renderMonitors() {
 	Promise.all([
-		axios.get(baseURL + '/postulationsByArea/academica'),
-		axios.get(baseURL + '/postulationsByArea/administrativa')
-	]).then(responses => {
-		const [academic, administrative] = responses;
-		
-		academic.data.forEach((monitor) => createMonitorELements(monitor, academicRender))
-		administrative.data.forEach((monitor) => createMonitorELements(monitor, adminRender));
+		axios.get(`${baseURL}/postulationsByArea/academica`),
+		axios.get(`${baseURL}/postulationsByArea/administrativa`)
+	]).then(([academic, administrative]) => {
+		academicData = academic.data;
+		administrativeData = administrative.data;
 
-		// console.log(academic.data, administrative.data)
+		academicData.forEach((monitor) => createMonitorELements(monitor, academicRender))
+		administrativeData.forEach((monitor) => createMonitorELements(monitor, adminRender));
 
 		function createMonitorELements({nombre, correo, area}, container) {
 			const virtualContainer = document.createElement("div");
@@ -151,8 +153,6 @@ function renderMonitors() {
 			
 			container.appendChild(virtualContainer)	
 		}
-
-		
 
 		document.querySelectorAll('.mon-info').forEach(btn => btn.addEventListener('click', (e) => { 
 			selectedEmail = e.target.parentElement.parentElement.querySelector('span').textContent;
@@ -227,96 +227,47 @@ function setStadistics() {
 	const areas = document.getElementById("monitor_areas");
 
 	Promise.all([
-		axios.get(baseURL + "/getUsersRoles"),
-		axios.get(baseURL + "/getMonitorsType"),
-		axios.get(baseURL + "/getMonitorsCareer"),
-		axios.get(baseURL + "/getMonitorsArea/academica"),
-		axios.get(baseURL + "/getMonitorsArea/administrativa"),
-	]).then(res => {
-		const [countedRoles, monitorTypes, monitorCareer, academicMons, administrativeMons] = res
+		axios.get(`${baseURL}/getUsersRoles`),
+		axios.get(`${baseURL}/getMonitorsType`),
+		axios.get(`${baseURL}/getMonitorsCareer`),
+	]).then(([rolesResponse, typeResponse, careerResponse]) => {
+		/* debugger */
 
-		// roles counter
-		const rolesChart = countedRoles.data
-		const rolesNums = rolesChart.map(count => count.conteo)
+		const rolesNums = processRolesData(rolesResponse.data);
+        const monitorCounts = processMonitorTypeData(typeResponse.data);
+        const { careerNames, careerCounts } = processCareerData(careerResponse.data);
 
-		new Chart(roles, {
-			type: 'doughnut',
-			data: {
-				labels: ['Monitores', 'Binestar', 'Administradores'],
-				datasets: [{
-					label: '# of usuarios por rol',
-					data: rolesNums,
-					borderWidth: 1
-				}]
-			}
-		})
-
-		// monitors per type
-		const monitorType = monitorTypes.data
-		const monitorCounts = monitorType.map(count => count.conteo)
-
-		new Chart(type, {
-			type: 'doughnut',
-			data: {
-				labels: ['Academica', 'Administrativa'],
-				datasets: [{
-					label: '# monitor por tipo de monitoria',
-					data: monitorCounts,
-					borderWidth: 1
-				}]
-			}
-		})
-
-		// career per monitor
-		const mCareer = monitorCareer.data
-		const careerNames = mCareer.map(c => c.carrera)
-		const careerCounts = mCareer.map(c => c.conteo)
-
-		new Chart(career, {
-			type: 'bar',
-			data: {
-				labels: careerNames,
-				datasets: [{
-					label: '# Carrera por monitor',
-					data: careerCounts,
-					borderWidth: 1
-				}]
-			}
-		})
-
-		// area per academic monitor
-		const acam_area = academicMons.data
-		const acamNames = acam_area.map(c => c.area)
-		const acamrCounts = acam_area.map(c => c.conteo)
-
-		new Chart(subjects, {
-			type: 'bar',
-			data: {
-				labels: acamNames,
-				datasets: [{
-					label: '# Area por monitor academico',
-					data: acamrCounts,
-					borderWidth: 1
-				}]
-			}
-		})
-
-		// area per administrative monitor
-		const admins_area = administrativeMons.data
-		const adminsNames = admins_area.map(c => c.area)
-		const adminsCounts = admins_area.map(c => c.conteo)
-
-		new Chart(areas, {
-			type: 'bar',
-			data: {
-				labels: adminsNames,
-				datasets: [{
-					label: '# Area por monitor administrativo',
-					data: adminsCounts,
-					borderWidth: 1
-				}]
-			}
-		})
+        // Create charts
+        createChart(roles, 'doughnut', ['Monitores', 'Binestar', 'Administradores'], rolesNums, '# of usuarios por rol');
+        createChart(type, 'doughnut', ['Administrativa', 'Academica'], monitorCounts, '# monitor por tipo de monitoria');
+        createChart(career, 'doughnut', careerNames, careerCounts, '# Carrera por monitor');
 	})
+}
 
+function createChart(element, chartType, labels, data, label) {
+    new Chart(element, {
+        type: chartType,
+        data: {
+            labels: labels,
+            datasets: [{
+                label: label,
+                data: data,
+                borderWidth: 1
+            }]
+        }
+    });
+}
+
+function processRolesData(rolesData) {
+    return rolesData.map(count => count.conteo);
+}
+
+function processMonitorTypeData(typeData) {
+    return typeData.map(count => count.conteo);
+}
+
+function processCareerData(careerData) {
+    const careerNames = careerData.map(c => c.carrera);
+    const careerCounts = careerData.map(c => c.conteo);
+    return { careerNames, careerCounts };
 }
