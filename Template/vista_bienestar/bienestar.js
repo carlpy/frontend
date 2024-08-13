@@ -35,9 +35,7 @@ window.addEventListener("DOMContentLoaded", () => {
     loadPostulations();
     loadContent();
 	handlePostulation();
-	renderMonitors();
 	setFeedbackForm();
-	setStadistics();
 });
 
 function loadContent() {
@@ -49,8 +47,8 @@ function loadContent() {
 				appliesContent.classList.remove("d-none");
 				loadPostulations();
             }
-            if (btn.dataset.show === "modules") { academicMonitors.classList.remove("d-none"); }
-            if (btn.dataset.show === "areas") { adminMonitors.classList.remove("d-none"); }
+            if (btn.dataset.show === "modules") { academicMonitors.classList.remove("d-none"); renderMonitors()}
+            if (btn.dataset.show === "areas") { adminMonitors.classList.remove("d-none"); renderMonitors() }
 			if (btn.dataset.show === "stadistics") { statsContainer.classList.remove("d-none"); setStadistics() } 
         })
     );
@@ -130,6 +128,8 @@ function renderMonitors() {
 	]).then(([academic, administrative]) => {
 		academicData = academic.data;
 		administrativeData = administrative.data;
+		academicRender.innerHTML = ''
+		adminRender.innerHTML = ''
 
 		academicData.forEach((monitor) => createMonitorELements(monitor, academicRender))
 		administrativeData.forEach((monitor) => createMonitorELements(monitor, adminRender));
